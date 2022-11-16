@@ -1,3 +1,5 @@
+package data;
+
 import java.util.Arrays;
 
 public class Data {
@@ -11,17 +13,19 @@ public class Data {
         this.confirmPassword = confirmPassword;
     }
 
-    public static void test(String login, String password, String confirmPassword) {
+    public static void test(String login, String password, String confirmPassword) throws WrongPasswordException {
         String[] loginArr = {login};
         for (String s : loginArr) {
             boolean test;
             if (s.matches("^(?i:[a-z]){20}")) {
                 test = true;
                 System.out.println(login + "\n" + test);
-            } else try {
-                throw new WrongLoginException();
-            } catch (WrongLoginException e) {
-                throw new RuntimeException(Arrays.toString(e.getStackTrace()));
+            } else {
+                try {
+                    throw new WrongLoginException();
+                } catch (WrongLoginException e) {
+                    throw new RuntimeException(Arrays.toString(e.getStackTrace()));
+                }
             }
         }
         String[] passwordArr = {password};
@@ -30,10 +34,12 @@ public class Data {
             if (s.matches("^(?d:[0-9]){20}") && password.equals(confirmPassword)) {
                 test = true;
                 System.out.println(password + "\n" + confirmPassword + "\n" + test);
-            } else try {
-                throw new WrongLoginException();
-            } catch (WrongLoginException e) {
-                throw new RuntimeException(Arrays.toString(e.getStackTrace()));
+            } else {
+                try {
+                    throw new WrongPasswordException(password);
+                } catch (WrongPasswordException e) {
+                    throw new WrongPasswordException(e.getMessage());
+                }
             }
         }
     }
